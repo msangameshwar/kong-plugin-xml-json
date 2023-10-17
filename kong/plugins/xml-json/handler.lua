@@ -5,7 +5,7 @@ local json = require "cjson"
 
 
 local plugin = {
-  PRIORITY = 1000, -- set the plugin priority, which determines plugin execution order
+  PRIORITY = 803,  -- set the plugin priority, which determines plugin execution order
   VERSION = "0.1", -- version in X.Y.Z format. Check hybrid-mode compatibility requirements.
 }
 
@@ -13,8 +13,6 @@ local plugin = {
 -- runs in the 'access_by_lua_block'
 function plugin:access(config)
   -- your custom code here
-  kong.log.inspect.on()
-  kong.log.inspect(config) -- check the logs for a pretty-printed config!
 
   if config.enable_on_request then
     local initialRequest = kong.request.get_raw_body()
@@ -47,11 +45,8 @@ function plugin:access(config)
 
     -- Convert the XML tree to a Lua table
     local lua_table = xml_tree_to_lua_table(handler.root)
-
-    for k, v in pairs(lua_table) do
-      kong.log.inspect(json.encode(v))
-      kong.service.request.set_raw_body(json.encode(v))
-    end
+    kong.service.request.set_raw_body(json.encode(lua_table))
+    kong.service.request.set_header("Content-Type", "application/json")
   end
 end
 
