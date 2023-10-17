@@ -1,28 +1,19 @@
 local xml2lua = require("xml2lua")
 local handler = require("xmlhandler.tree")
 local json = require "cjson"
-
-
-
 local plugin = {
   PRIORITY = 803,  -- set the plugin priority, which determines plugin execution order
   VERSION = "0.1", -- version in X.Y.Z format. Check hybrid-mode compatibility requirements.
 }
-
-
 -- runs in the 'access_by_lua_block'
-function plugin:access(config)
+function plugin:body_filter(config)
   -- your custom code here
-
   if config.enable_on_request then
-    local initialRequest = kong.request.get_raw_body()
+    local initialRequest = kong.response.get_raw_body()
     local xml = initialRequest
-
     --Instantiates the XML parser
     local parser = xml2lua.parser(handler)
-
     parser:parse(xml)
-
     -- Function to convert the XML tree to a Lua table recursively
     local function xml_tree_to_lua_table(xml_tree)
       local result = {}
@@ -42,11 +33,9 @@ function plugin:access(config)
       end
       return result
     end
-
     -- Convert the XML tree to a Lua table
     local lua_table = xml_tree_to_lua_table(handler.root)
-    kong.service.request.set_raw_body(json.encode(lua_table))
-    kong.service.request.set_header("Content-Type", "application/json")
+    kong.response.set_raw_body(json.encode(lua_table))
   end
 end
 
