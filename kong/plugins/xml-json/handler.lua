@@ -15,6 +15,8 @@ end
 -- runs in the 'access_by_lua_block'
 function plugin:body_filter(config)
   -- your custom code here
+  kong.log.set_serialize_value("LOG 1:", "Before conversion ************")
+  kong.log.set_serialize_value("response:", kong.service.response.get_raw_body())
   if config.enable_on_request then
     local initialRequest = kong.service.response.get_raw_body()
     local xml = initialRequest
@@ -43,12 +45,13 @@ function plugin:body_filter(config)
       end
       return result
     end
+    kong.log.set_serialize_value("LOG 2:", "After conversion ************")
 
     -- Convert the XML tree to a Lua table
     local lua_table = xml_tree_to_lua_table(handler.root)
     kong.service.response.set_raw_body(json.encode(lua_table))
     --kong.service.response.set_header("Content-Type", "application/json")
-    kong.log.set_serialize_value("Converted JSON", json.encode(lua_table))
+    kong.log.set_serialize_value("Converted JSON:", json.encode(lua_table))
 
   end
 end
