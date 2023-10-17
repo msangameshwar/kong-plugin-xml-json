@@ -2,7 +2,6 @@ local xml2lua = require("xml2lua")
 local handler = require("xmlhandler.tree")
 local json = require "cjson"
 
-local
 local plugin = {
   PRIORITY = 803,  -- set the plugin priority, which determines plugin execution order
   VERSION = "0.1", -- version in X.Y.Z format. Check hybrid-mode compatibility requirements.
@@ -46,7 +45,7 @@ function plugin:access(config)
     -- Convert the XML tree to a Lua table
     local lua_table = xml_tree_to_lua_table(handler.root)
     kong.service.request.set_raw_body(json.encode(lua_table))
-    
+
     kong.log.set_serialize_value("LOG 2:", "After conversion ************")
     kong.log.set_serialize_value("Converted JSON:", json.encode(lua_table))
 
