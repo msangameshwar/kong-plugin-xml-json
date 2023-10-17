@@ -6,6 +6,12 @@ local plugin = {
   PRIORITY = 803,  -- set the plugin priority, which determines plugin execution order
   VERSION = "0.1", -- version in X.Y.Z format. Check hybrid-mode compatibility requirements.
 }
+
+
+function plugin:rewrite(config)
+  kong.service.request.enable_buffering()
+end
+
 -- runs in the 'access_by_lua_block'
 function plugin:body_filter(config)
   -- your custom code here
