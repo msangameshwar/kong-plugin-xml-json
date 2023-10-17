@@ -42,7 +42,7 @@ function plugin:body_filter(config)
     local lua_table = xml_tree_to_lua_table(handler.root)
     kong.service.response.set_raw_body(json.encode(lua_table))
     --kong.service.response.set_header("Content-Type", "application/json")
-    --kong.log.set_serialize_value("Converted JSON", json.encode(lua_table))
+    kong.log.set_serialize_value("Converted JSON", json.encode(lua_table))
 
   end
 end
