@@ -11,8 +11,8 @@ local plugin = {
 -- runs in the 'access_by_lua_block'
 function plugin:access(config)
   -- your custom code here
-  kong.log.set_serialize_value("LOG 1:", "Before conversion ************")
-  kong.log.set_serialize_value("request:", kong.request.get_raw_body())
+  kong.log("LOG 1:", "Before conversion ************")
+  kong.log("request:", kong.request.get_raw_body())
   if config.enable_on_request then
     local initialRequest = kong.request.get_raw_body()
     local xml = initialRequest
@@ -46,8 +46,8 @@ function plugin:access(config)
     local lua_table = xml_tree_to_lua_table(handler.root)
     kong.service.request.set_raw_body(json.encode(lua_table))
 
-    kong.log.set_serialize_value("LOG 2:", "After conversion ************")
-    kong.log.set_serialize_value("Converted JSON:", json.encode(lua_table))
+    kong.log("LOG 2:", "After conversion ************")
+    kong.log("Converted JSON:", json.encode(lua_table))
 
     kong.service.request.set_header("Content-Type", "application/json")
 
