@@ -48,10 +48,9 @@ function plugin:access(config)
     -- Convert the XML tree to a Lua table
 	local lua_table = {}
     lua_table = xml_tree_to_lua_table(handler.root)
-	local converted_data = ""
-	converted_data = json.encode(lua_table)
-    kong.service.request.set_raw_body(converted_data)
-	kong.service.request.set_header("Content-Type", "application/json")
+    for k, v in pairs(lua_table) do
+      kong.service.request.set_raw_body(json.encode(v))
+    end
   end
 end
 
