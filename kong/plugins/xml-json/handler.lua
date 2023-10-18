@@ -45,12 +45,14 @@ function plugin:access(config)
     --   return result
     -- end
 
-    -- Convert the XML tree to a Lua table
-    --local lua_table = {}
+    -- -- Convert the XML tree to a Lua table
+    -- local lua_table = {}
     -- lua_table = xml_tree_to_lua_table(handler.root)
 
     kong.service.request.set_raw_body(json.encode(handler.root))
-    
+    -- for k, v in pairs(lua_table) do
+    --   kong.service.request.set_raw_body(json.encode(v))
+    -- end
   end
 end
 
