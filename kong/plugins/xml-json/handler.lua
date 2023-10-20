@@ -1,26 +1,49 @@
 local xml2lua = require("xml2lua")
 local json = require "cjson"
+local
 local plugin = {
   PRIORITY = 803,  -- set the plugin priority, which determines plugin execution order
   VERSION = "0.1", -- version in X.Y.Z format. Check hybrid-mode compatibility requirements.
 }
 -- runs in the 'access_by_lua_block'
 function plugin:access(config)
-  -- your custom code here
+
+  -- Check the request body content type is application/xml or not
+  if kong.request.get_headers('Content-Type') ~= "application/xml" then
+    local error_response = {
+      success = "false",
+      status = "failed",
+      errorCode = "8003",
+      message = "XML request body not found",
+    }
+    return kong.response.exit(400, error_response, {
+      ["Content-Type"] = "application/json"
+    })
+  end
+  -- Check the request body is empty or not
+  if kong.request.get_raw_body() =="" then
+    local error_response = {
+      success = "false",
+      status = "failed",
+      errorCode = "8003",
+      message = "XML request body is Empty",
+    }
+    return kong.response.exit(400, error_response, {
+      ["Content-Type"] = "application/json"
+    })
+  end
+  
   if config.enable_on_request then
-    local initialRequest = ""
-    kong.log.set_serialize_value("initialRequest1", initialRequest)
-    initialRequest = kong.request.get_raw_body()
-    kong.log.set_serialize_value("initialRequest2", initialRequest)
-    local xml = ""
-    kong.log.set_serialize_value("xml1", xml)
-    xml = initialRequest
-    kong.log.set_serialize_value("xml2", xml)
-    --Instantiates the XML parser =
-    local handler = {}
-    handler = require("xmlhandler.tree")
+    local initialRequest = kong.request.get_raw_body()
+
+    local xml = initialRequest
+
+    local handler = require("xmlhandler.tree")
+
     handler = handler:new()
+
     local parser = xml2lua.parser(handler)
+
     parser:parse(xml)
     -- Function to convert the XML tree to a Lua table recursively
     local function xml_tree_to_lua_table(xml_tree)
@@ -43,12 +66,12 @@ function plugin:access(config)
     end
     -- Convert the XML tree to a Lua table
     local lua_table = {}
-    --kong.log.set_serialize_value("lua_table1", lua_table)
-    kong.log.set_serialize_value("handler_root", handler.root)
     lua_table = xml_tree_to_lua_table(handler.root)
-    kong.log.set_serialize_value("lua_table2", json.encode(lua_table))
+
     kong.service.request.set_raw_body(json.encode(lua_table))
+
     kong.service.request.set_header("Content-Type", "application/json")
+
     lua_table = {}
   end
 end
