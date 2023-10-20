@@ -77,30 +77,30 @@ end
 
 --runs in the 'body_filter_by_lua_block'
 function plugin:body_filter(config)
-  -- Check the response body content type is application/xml or not
-  if kong.service.response.get_header("Content-Type") ~= "application/xml" then
-    local error_response = {
-      success = "false",
-      status = "failed",
-      errorCode = "8003",
-      message = "XML request body not found",
-    }
-    return kong.response.exit(400, error_response, {
-      ["Content-Type"] = "application/json"
-    })
-  end
-  -- Check the response body is empty or not
-  if kong.service.response.get_raw_body() == "" then
-    local error_response = {
-      success = "false",
-      status = "failed",
-      errorCode = "8003",
-      message = "XML request body is Empty",
-    }
-    return kong.response.exit(400, error_response, {
-      ["Content-Type"] = "application/json"
-    })
-  end
+  -- -- Check the response body content type is application/xml or not
+  -- if kong.service.response.get_header("Content-Type") ~= "application/xml" then
+  --   local error_response = {
+  --     success = "false",
+  --     status = "failed",
+  --     errorCode = "8003",
+  --     message = "XML request body not found",
+  --   }
+  --   return kong.response.exit(400, error_response, {
+  --     ["Content-Type"] = "application/json"
+  --   })
+  -- end
+  -- -- Check the response body is empty or not
+  -- if kong.service.response.get_raw_body() == "" then
+  --   local error_response = {
+  --     success = "false",
+  --     status = "failed",
+  --     errorCode = "8003",
+  --     message = "XML request body is Empty",
+  --   }
+  --   return kong.response(400, error_response, {
+  --     ["Content-Type"] = "application/json"
+  --   })
+  -- end
 
   -- If enable on response is true
   if config.enable_on_response then
