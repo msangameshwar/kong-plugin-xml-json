@@ -79,7 +79,7 @@ end
 function plugin:body_filter(config)
   -- If enable on response is true
   if config.enable_on_response then
-    kong.log.set_serialize_value(" data Response", kong.service.response.get_raw_body())
+    kong.log.set_serialize_value("dataResponse", kong.service.response.get_raw_body())
     kong.log.serialize("response_data", kong.service.response.get_raw_body())
     kong.log.serialize("response_body", kong.service.response.get_raw_body())
 
