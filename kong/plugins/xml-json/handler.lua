@@ -9,7 +9,7 @@ local plugin = {
 function plugin:access(config)
 
   -- Check the request body content type is application/xml or not
-  if kong.request.get_headers('Content-Type') ~= "application/xml" then
+  if kong.request.get_header("Content-Type") ~= "application/xml" then
     local error_response = {
       success = "false",
       status = "failed",
