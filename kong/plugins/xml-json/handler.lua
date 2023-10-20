@@ -1,6 +1,6 @@
 local xml2lua = require("xml2lua")
 local json = require "cjson"
-local
+
 local plugin = {
   PRIORITY = 803,  -- set the plugin priority, which determines plugin execution order
   VERSION = "0.1", -- version in X.Y.Z format. Check hybrid-mode compatibility requirements.
@@ -32,7 +32,7 @@ function plugin:access(config)
       ["Content-Type"] = "application/json"
     })
   end
-  
+
   if config.enable_on_request then
     local initialRequest = kong.request.get_raw_body()
 
