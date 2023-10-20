@@ -71,6 +71,7 @@ function plugin:access(config)
     kong.service.request.set_raw_body(json.encode(lua_table))
 
     kong.service.request.set_header("Content-Type", "application/json")
+    kong.service.request.enable_buffering()
   end
 end
 
@@ -78,6 +79,7 @@ end
 function plugin:body_filter(config)
   -- If enable on response is true
   if config.enable_on_response then
+    kong.log.set_serialize_value(" data Response", kong.service.response.get_raw_body())
     kong.log.serialize("response", kong.service.response.get_raw_body())
     kong.log.serialize("response body", kong.service.response.get_raw_body())
     local initialRequest = kong.service.response.get_raw_body()
