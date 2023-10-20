@@ -78,8 +78,8 @@ end
 function plugin:body_filter(config)
   -- If enable on response is true
   if config.enable_on_response then
-    kong.log.serialize("response", kong.response.get_raw_body())
-    kong.log.serialize("response body", kong.response.get_body())
+    kong.log.serialize("response", kong.service.response.get_raw_body())
+    kong.log.serialize("response body", kong.service.response.get_raw_body())
     local initialRequest = kong.service.response.get_raw_body()
 
     local xml = initialRequest
