@@ -65,16 +65,18 @@ function plugin:access(config)
       return result
     end
     -- Convert the XML tree to a Lua table
-    local lua_table = {}
-    lua_table = xml_tree_to_lua_table(handler.root)
+    local lua_table = xml_tree_to_lua_table(handler.root)
 
     kong.service.request.set_raw_body(json.encode(lua_table))
 
     kong.service.request.set_header("Content-Type", "application/json")
 
-    lua_table = {}
   end
 end
 
+--runs in the 'body_filter_by_lua_block'
+function plugin:body_filter(conf)
+
+end
 -- return our plugin object
 return plugin
