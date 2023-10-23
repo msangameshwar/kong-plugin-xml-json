@@ -75,13 +75,16 @@ function plugin:access(config)
   end
 end
 
+function plugin:rewrite()
+  -- your custom code here
+  kong.service.request.enable_buffering()
+end
 --runs in the 'body_filter_by_lua_block'
 function plugin:body_filter(config)
   -- If enable on response is true
-  if config.enable_on_response then
-    kong.log.set_serialize_value("dataResponse", kong.service.response.get_raw_body())
-    kong.log.serialize("response_data", kong.service.response.get_raw_body())
-    kong.log.serialize("response_body", kong.service.response.get_raw_body())
+  --if config.enable_on_response then
+  local initialResponse = kong.service.response.get_raw_body()
+  --kong.log.set_serialize_value("dataResponse", initialResponse)
 
     -- local initialRequest = kong.service.response.get_raw_body()
 
@@ -119,8 +122,7 @@ function plugin:body_filter(config)
     -- kong.service.response.set_raw_body(json.encode(lua_table))
 
     -- kong.service.response.set_header("Content-Type", "application/json")
-  end
+  -- end
 end
--- return our plugin object
 -- return our plugin object
 return plugin
